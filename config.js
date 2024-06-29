@@ -13,8 +13,8 @@ module.exports = {
   JWT_SECRET: "YkY4fai9sUT",
 
   //baseURL
-  baseURL: "https://the-app-backend-c2780c2bf830.herokuapp.com/",
-
+ // baseURL: "https://the-app-backend-c2780c2bf830.herokuapp.com/",
+  baseURL:"https://backend.bistail.com/",
   //Firebase server key for send notification
   SERVER_KEY: "406ff1e96700f11d905b02829f51e07a75a12960",
 };

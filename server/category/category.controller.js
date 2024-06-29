@@ -168,11 +168,13 @@ exports.getCategory = async (req, res) => {
     const categoryPromises = categories?.map(async (category) => {
       const categoryId = category._id;
 
-      const [categoryProductCount, totalSubcategoryCount] = await Promise.all([
-        Product.countDocuments({ category: categoryId }),
-        category.subCategory.length,
-      ]);
+     // const [categoryProductCount, totalSubcategoryCount] = await Promise.all([
+     //   Product.countDocuments({ category: categoryId }),
+     //   category.subCategory.length,
+     // ]);
+const totalSubcategoryCount = Array.isArray(category.subCategory) ? category.subCategory.length : 0;
 
+      const categoryProductCount = await Product.countDocuments({ category: categoryId });
       const modifiedCategory = {
         _id: category._id,
         name: category.name,
