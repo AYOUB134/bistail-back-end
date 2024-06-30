@@ -14,12 +14,17 @@ const cors = require("cors");
 
 //import cors
 app.use(logger("dev"));
-app.use(cors({ origin: "*" }));
+app.use(cors({
+  origin: ['https://bistail.com','http://127.0.0.1:3000', 'http://localhost:3000'],
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 204
+}));
 app.use(express.json());
 
-app.use(bodyParser.urlencoded({ extended: false }))
-
-app.use(bodyParser.json())
+// Increase payload limit
+app.use(bodyParser.json({ limit: '2gb' })); // Increase as needed
+app.use(bodyParser.urlencoded({ limit: '2gb', extended: true }));
 
 //logging middleware
 

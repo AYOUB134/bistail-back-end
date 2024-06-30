@@ -24,6 +24,8 @@ const Reel = require("../reel/reel.model");
 const Product = require("../product/product.model");
 const ProductRequest = require("../productRequest/productRequest.model");
 
+
+
 //generate UniqueId
 const generateUniqueId = async () => {
   const random = () => {
@@ -545,7 +547,96 @@ exports.fakeSellers = async (req, res) => {
 };
 
 //create fake seller by admin
-exports.createFakeSeller = async (req, res) => {
+// exports.createFakeSeller = async (req, res) => {
+//   try {
+//     if (
+//       !req.body ||
+//       !req.body.firstName ||
+//       !req.body.lastName ||
+//       !req.body.mobileNumber ||
+//       !req.body.email ||
+//       !req.body.gender ||
+//       !req.body.businessName ||
+//       !req.body.businessTag ||
+//       !req.files
+//     ) {
+//       if (req.files) deleteFiles(req.files);
+//       return res.status(200).json({ status: false, message: "Oops ! Invalid details." });
+//     }
+
+//     const seller = new Seller();
+
+//     seller.firstName = req?.body?.firstName;
+//     seller.lastName = req?.body?.lastName;
+//     seller.businessName = req?.body?.businessName;
+//     seller.businessTag = req?.body?.businessTag;
+//     seller.mobileNumber = req?.body?.mobileNumber;
+//     seller.gender = req?.body?.gender;
+//     seller.email = req?.body?.email;
+//     seller.password = cryptr.encrypt(req?.body?.password);
+//     seller.isFake = true;
+//     seller.uniqueId = await Promise.resolve(generateUniqueId());
+//     seller.date = new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
+
+//     //seller's address fields
+//     seller.address.address = req?.body?.address;
+//     seller.address.landMark = req?.body?.landMark;
+//     seller.address.city = req?.body?.city;
+//     seller.address.pinCode = req?.body?.pinCode;
+//     seller.address.state = req?.body?.state;
+//     seller.address.country = req?.body?.country;
+
+//     //seller's bankDetails fields
+//     seller.bankDetails.bankBusinessName = req?.body?.bankBusinessName;
+//     seller.bankDetails.bankName = req?.body?.bankName;
+//     seller.bankDetails.accountNumber = req?.body?.accountNumber;
+//     seller.bankDetails.IFSCCode = req?.body?.IFSCCode;
+//     seller.bankDetails.branchName = req?.body?.branchName;
+
+//     if (req.files.image) {
+//       const image = seller.image?.split("storage");
+//       if (image) {
+//         if (fs.existsSync("storage" + image[1])) {
+//           fs.unlinkSync("storage" + image[1]);
+//         }
+//       }
+
+//       seller.image = config.baseURL + req.files.image[0].path;
+//     }
+
+//     if (req.files.video) {
+//       const video = seller.video?.split("storage");
+//       if (video) {
+//         if (fs.existsSync("storage" + video[1])) {
+//           fs.unlinkSync("storage" + video[1]);
+//         }
+//       }
+
+//       seller.video = config.baseURL + req.files.video[0].path;
+//     }
+
+//     await seller.save();
+
+//     const sellerData = await Seller.findById(seller._id);
+//     sellerData.password = cryptr.decrypt(sellerData.password);
+
+//     return res.status(200).json({
+//       status: true,
+//       message: "finally, fakeSeller added by the admin!",
+//       sellerData,
+//     });
+//   } catch (error) {
+//     if (req.files) deleteFiles(req.files);
+//     console.log(error);
+//     return res.status(500).json({
+//       status: false,
+//       message: error.message || "Internal Server Error",
+//     });
+//   }
+// };
+
+exports.createFakeSeller =  async (req, res) => {
+  console.log(req.body);
   try {
     if (
       !req.body ||
@@ -559,68 +650,62 @@ exports.createFakeSeller = async (req, res) => {
       !req.files
     ) {
       if (req.files) deleteFiles(req.files);
-      return res.status(200).json({ status: false, message: "Oops ! Invalid details." });
+      return res.status(200).json({ status: false, message: "Oops! Invalid details." });
     }
 
-    const seller = new Seller();
-
-    seller.firstName = req?.body?.firstName;
-    seller.lastName = req?.body?.lastName;
-    seller.businessName = req?.body?.businessName;
-    seller.businessTag = req?.body?.businessTag;
-    seller.mobileNumber = req?.body?.mobileNumber;
-    seller.gender = req?.body?.gender;
-    seller.email = req?.body?.email;
-    seller.password = cryptr.encrypt(req?.body?.password);
-    seller.isFake = true;
-    seller.uniqueId = await Promise.resolve(generateUniqueId());
-    seller.date = new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
-
-    //seller's address fields
-    seller.address.address = req?.body?.address;
-    seller.address.landMark = req?.body?.landMark;
-    seller.address.city = req?.body?.city;
-    seller.address.pinCode = req?.body?.pinCode;
-    seller.address.state = req?.body?.state;
-    seller.address.country = req?.body?.country;
-
-    //seller's bankDetails fields
-    seller.bankDetails.bankBusinessName = req?.body?.bankBusinessName;
-    seller.bankDetails.bankName = req?.body?.bankName;
-    seller.bankDetails.accountNumber = req?.body?.accountNumber;
-    seller.bankDetails.IFSCCode = req?.body?.IFSCCode;
-    seller.bankDetails.branchName = req?.body?.branchName;
+    const seller = new Seller({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      businessName: req.body.businessName,
+      businessTag: req.body.businessTag,
+      mobileNumber: req.body.mobileNumber,
+      gender: req.body.gender,
+      email: req.body.email,
+      password: cryptr.encrypt(req.body.password),
+      isFake: true,
+      uniqueId: await generateUniqueId(),
+      date: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
+      address: {
+        address: req.body.address,
+        landMark: req.body.landMark,
+        city: req.body.city,
+        pinCode: req.body.pinCode,
+        state: req.body.state,
+        country: req.body.country,
+      },
+      bankDetails: {
+        bankBusinessName: req.body.bankBusinessName,
+        bankName: req.body.bankName,
+        accountNumber: req.body.accountNumber,
+        IFSCCode: req.body.IFSCCode,
+        branchName: req.body.branchName,
+      }
+    });
 
     if (req.files.image) {
       const image = seller.image?.split("storage");
-      if (image) {
-        if (fs.existsSync("storage" + image[1])) {
-          fs.unlinkSync("storage" + image[1]);
-        }
+      if (image && fs.existsSync("storage" + image[1])) {
+        fs.unlinkSync("storage" + image[1]);
       }
-
       seller.image = config.baseURL + req.files.image[0].path;
     }
 
     if (req.files.video) {
       const video = seller.video?.split("storage");
-      if (video) {
-        if (fs.existsSync("storage" + video[1])) {
-          fs.unlinkSync("storage" + video[1]);
-        }
+      if (video && fs.existsSync("storage" + video[1])) {
+        fs.unlinkSync("storage" + video[1]);
       }
-
       seller.video = config.baseURL + req.files.video[0].path;
     }
 
     await seller.save();
 
-    const sellerData = await Seller.findById(seller._id);
+    const sellerData = await Seller.findById(seller._id).lean();
     sellerData.password = cryptr.decrypt(sellerData.password);
 
     return res.status(200).json({
       status: true,
-      message: "finally, fakeSeller added by the admin!",
+      message: "Finally, fakeSeller added by the admin!",
       sellerData,
     });
   } catch (error) {
@@ -632,6 +717,7 @@ exports.createFakeSeller = async (req, res) => {
     });
   }
 };
+
 
 //update fakeSeller profile for admin
 exports.updateFakeSellerProfile = async (req, res) => {
